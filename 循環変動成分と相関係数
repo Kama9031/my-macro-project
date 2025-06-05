@@ -1,0 +1,98 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyOtH2k+0fj5G1I+cdR4nZZg",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Kama9031/my-macro-project/blob/main/%E5%BE%AA%E7%92%B0%E5%A4%89%E5%8B%95%E6%88%90%E5%88%86%E3%81%A8%E7%9B%B8%E9%96%A2%E4%BF%82%E6%95%B0\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "id": "41wnB0DVSS5U"
+      },
+      "outputs": [],
+      "source": [
+        "import numpy as np\n",
+        "import pandas as pd\n",
+        "import matplotlib.pyplot as plt\n",
+        "from statsmodels.tsa.filters.hp_filter import hpfilter\n",
+        "from pandas_datareader import data as pdr\n",
+        "import datetime\n",
+        "\n",
+        "start = datetime.datetime(1990, 1, 1)\n",
+        "end = datetime.datetime(2019, 12, 31)\n",
+        "\n",
+        "gr_gdp = pdr.DataReader('CLVMNACSCAB1GQEL', 'fred', start, end)\n",
+        "jpn_gdp = pdr.DataReader('JPNRGDPEXP', 'fred', start, end)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "gr_gdp_log = np.log(gr_gdp).dropna()\n",
+        "jpn_gdp_log = np.log(jpn_gdp).dropna()\n",
+        "\n",
+        "cycle_gr, trend_gr = hpfilter(gr_gdp_log['CLVMNACSCAB1GQEL'], lamb=1600)\n",
+        "cycle_jpn, trend_jpn = hpfilter(jpn_gdp_log['JPNRGDPEXP'], lamb=1600)"
+      ],
+      "metadata": {
+        "id": "WMA31OLuXEpl"
+      },
+      "execution_count": 2,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "std_gr = cycle_gr.std()\n",
+        "std_jpn = cycle_jpn.std()\n",
+        "correlation = cycle_gr.corr(cycle_jpn)\n",
+        "\n",
+        "print(f\"ギリシャの循環変動成分の標準偏差: {std_gr:.4f}\")\n",
+        "print(f\"日本の循環変動成分の標準偏差: {std_jpn:.4f}\")\n",
+        "print(f\"ギリシャと日本の間の循環変動成分の相関係数: {correlation:.4f}\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "3BXVcL8nH6ki",
+        "outputId": "ef1f5e0b-a78b-4949-abbc-2629abe292d4"
+      },
+      "execution_count": 3,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "ギリシャの循環変動成分の標準偏差: 0.0215\n",
+            "日本の循環変動成分の標準偏差: 0.0142\n",
+            "ギリシャと日本の間の循環変動成分の相関係数: 0.0105\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
