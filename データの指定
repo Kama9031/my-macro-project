@@ -1,0 +1,68 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyN5HuvYjYNNXBAm3Faf6dKz",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Kama9031/my-macro-project/blob/main/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E6%8C%87%E5%AE%9A\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "id": "b_nWetux2VFZ"
+      },
+      "outputs": [],
+      "source": [
+        "import pandas as pd\n",
+        "import numpy as np\n",
+        "\n",
+        "pwt90 = pd.read_stata('https://www.rug.nl/ggdc/docs/pwt90.dta')\n",
+        "\n",
+        "oecd_countries = [\n",
+        "    'United Kingdom', 'United States',\"Australia\", \"Austria\", \"Belgium\", \"Canada\", \"Denmark\", \"Finland\", \"France\", \"Germany\", \"Greece\", \"Iceland\",\n",
+        "    \"Ireland\", \"Italy\", \"Japan\", \"Netherlands\", \"New Zealand\", \"Norway\", \"Portugal\", \"Spain\", \"Sweden\",\n",
+        "    \"Switzerland\", \"United Kingdom\", \"United States\"\n",
+        "\n",
+        "]"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "data = pwt90[\n",
+        "    pwt90['country'].isin(oecd_countries) &\n",
+        "    pwt90['year'].between(1990, 2019)\n",
+        "]\n",
+        "\n",
+        "relevant_cols = ['countrycode', 'country', 'year', 'rgdpna', 'rkna', 'pop', 'emp', 'avh', 'labsh', 'rtfpna']\n",
+        "data = data[relevant_cols].dropna()"
+      ],
+      "metadata": {
+        "id": "3yDoD1A062GS"
+      },
+      "execution_count": 2,
+      "outputs": []
+    }
+  ]
+}
